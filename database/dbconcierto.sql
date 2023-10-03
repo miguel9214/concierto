@@ -1,12 +1,13 @@
 /*
 MySQL Backup
 Database: dbconcierto
-Backup Time: 2023-10-02 19:32:39
+Backup Time: 2023-10-02 20:40:35
 */
 
 SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `dbconcierto`.`details`;
 DROP TABLE IF EXISTS `dbconcierto`.`methodpayment`;
+DROP TABLE IF EXISTS `dbconcierto`.`migrations`;
 DROP TABLE IF EXISTS `dbconcierto`.`payments`;
 DROP TABLE IF EXISTS `dbconcierto`.`shopping`;
 DROP TABLE IF EXISTS `dbconcierto`.`tickets`;
@@ -26,6 +27,12 @@ CREATE TABLE `methodpayment` (
   `name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `migrations` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `batch` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE `payments` (
   `id` int NOT NULL,
   `price` decimal(10,2) DEFAULT NULL,
@@ -72,16 +79,16 @@ CREATE TABLE `tickets` (
   CONSTRAINT `updated_tickets_user` FOREIGN KEY (`updated_by_user`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 CREATE TABLE `users` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `phone` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
-  `status` varchar(255) DEFAULT NULL,
-  `created_at` varchar(255) DEFAULT NULL,
-  `updated_up` datetime DEFAULT NULL,
+  `status` char(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 BEGIN;
 LOCK TABLES `dbconcierto`.`details` WRITE;
 DELETE FROM `dbconcierto`.`details`;
@@ -90,6 +97,11 @@ COMMIT;
 BEGIN;
 LOCK TABLES `dbconcierto`.`methodpayment` WRITE;
 DELETE FROM `dbconcierto`.`methodpayment`;
+UNLOCK TABLES;
+COMMIT;
+BEGIN;
+LOCK TABLES `dbconcierto`.`migrations` WRITE;
+DELETE FROM `dbconcierto`.`migrations`;
 UNLOCK TABLES;
 COMMIT;
 BEGIN;
@@ -110,5 +122,6 @@ COMMIT;
 BEGIN;
 LOCK TABLES `dbconcierto`.`users` WRITE;
 DELETE FROM `dbconcierto`.`users`;
+INSERT INTO `dbconcierto`.`users` (`id`,`name`,`email`,`phone`,`password`,`status`,`updated_at`,`created_at`) VALUES (1, 'miguel Ramos', 'miguel921433@gmail.com', '3178519427', '$2y$10$Gr82yuLfS5/GwEsnrSvu4.MSbhcbWut8./e.eAgba8wufI0PqhTMy', NULL, '2023-10-03 01:33:11', '2023-10-03 01:33:11');
 UNLOCK TABLES;
 COMMIT;
